@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block body %}
+<h2>Digital Products</h2>
+<div class="product-grid">
+  {% for p in products %}
+  <div class="product-card">
+    <h3>{{ p.title }}</h3>
+    <p>{{ p.description|truncatechars:150 }}</p>
+    <p><strong>KSh {{ p.price }}</strong></p>
+    <a class="button" href="{% url 'monetize:product_detail' p.slug %}">View</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% for b in blogs %}
+<div class="live-result-item" onclick="window.location.href='{% url 'blogpost' b.Slug %}'">
+    <h4>{{ b.Title }}</h4>
+    <small>{{ b.Content.plain|truncatewords:12 }}</small>
+</div>
+{% empty %}
+<p style="padding:10px;">No results found</p>
+{% endfor %}

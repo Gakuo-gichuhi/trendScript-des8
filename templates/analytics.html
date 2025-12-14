@@ -1,0 +1,128 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<style>
+  .chart-container {
+      width: 100%;
+      max-width: 900px;
+      margin-top: 40px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .bar {
+      height: 40px;
+      margin: 10px 0;
+      background: #ddd;
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
+  }
+
+  .bar-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 5px;
+      transition: width 1.2s ease;
+  }
+
+  .bar-label {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-weight: bold;
+      color: #fff;
+  }
+
+  .bar-tooltip {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      padding: 4px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      display: none;
+  }
+
+  .bar:hover .bar-tooltip {
+      display: inline-block;
+  }
+</style>
+
+<h1>📊 Site Analytics</h1>
+
+<div class="container mt-4">
+
+  <ul class="list-group">
+    <li class="list-group-item">📝 Total Blog Posts: <strong>{{ total_blogs }}</strong></li>
+    <li class="list-group-item">💬 Total Comments: <strong>{{ total_comments }}</strong></li>
+    <li class="list-group-item">❤️ Total Likes: <strong>{{ total_likes }}</strong></li>
+
+    <li class="list-group-item">
+      🔥 Most Liked Post:
+      {% if most_liked %}
+        <br><strong>{{ most_liked.Title }}</strong>
+        <br>Likes: {{ most_liked_count }}
+        <br><a href="{% url 'admin:blog_blog_change' most_liked.id %}" class="btn btn-sm btn-outline-primary mt-2">View</a>
+      {% else %}
+        No posts found.
+      {% endif %}
+    </li>
+  </ul>
+
+  <div class="chart-container mt-5">
+      <h3 class="mb-3">📈 Popularity Chart (Custom)</h3>
+
+      {% for title, likes in popularity_data %}
+      <div class="bar"
+           data-likes="{{ likes }}"
+           data-title="{{ title }}">
+           
+          <div class="bar-fill"></div>
+          <div class="bar-label">{{ title }}</div>
+          <span class="bar-tooltip">{{ likes }} likes</span>
+      </div>
+      {% endfor %}
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const bars = document.querySelectorAll(".bar");
+    let maxLikes = 0;
+
+    // Get max likes for scaling
+    bars.forEach(bar => {
+        const likes = parseInt(bar.dataset.likes);
+        if (likes > maxLikes) maxLikes = likes;
+    });
+
+    // Animate & color bars
+    bars.forEach(bar => {
+        const likes = parseInt(bar.dataset.likes);
+        const fill = bar.querySelector(".bar-fill");
+
+        // Percentage width
+        const percent = maxLikes ? (likes / maxLikes) * 100 : 0;
+
+        // Assign colors based on popularity level
+        if (percent > 70) fill.style.background = "#28a745";      // Green (Top posts)
+        else if (percent > 35) fill.style.background = "#ffc107"; // Yellow (Medium posts)
+        else fill.style.background = "#dc3545";                   // Red (Low posts)
+
+        // Animate bar
+        setTimeout(() => {
+            fill.style.width = percent + "%";
+        }, 200);
+    });
+});
+</script>
+
+{% endblock %}

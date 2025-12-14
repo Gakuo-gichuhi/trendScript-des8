@@ -1,0 +1,7 @@
+{% for comment in comments %}
+<div class="comment" style="border-bottom:1px solid #ddd;margin-bottom:0.5rem;padding-bottom:0.5rem;">
+  <strong>{{ comment.name }}</strong>
+  <small>{{ comment.time|date:"M d, Y H:i" }}</small>
+  <p>{{ comment.content }}</p>
+</div>
+{% endfor %}

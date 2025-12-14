@@ -1,0 +1,5 @@
+<div class="comment-box">
+    <strong>{{ comment.user.username }}</strong>
+    <small class="text-muted">{{ comment.time|date:"M d, Y H:i" }}</small>
+    <p>{{ comment.content|linebreaks }}</p>
+</div>

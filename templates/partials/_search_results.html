@@ -1,0 +1,25 @@
+{% load highlight %}
+
+{% for blog in results %}
+<div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm">
+        {% if blog.Image %}
+            <img src="{{ blog.Image.url }}" class="card-img-top" style="height:200px; object-fit:cover;" alt="{{ blog.Title }}">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">
+                <a href="{% url 'blog:blogpost' blog.Slug %}?q={{ query }}">
+                    {{ blog.Title|highlight:query }}
+                </a>
+            </h5>
+            <p class="card-text text-muted small">
+                {{ blog.Content.plain|highlight:query|truncatewords:40 }}
+            </p>
+            <a href="{% url 'blog:blogpost' blog.Slug %}?q={{ query }}" 
+               class="btn btn-sm btn-outline-primary">Read More →</a>
+        </div>
+    </div>
+</div>
+{% empty %}
+<p class="text-muted">No results found for "<strong>{{ query }}</strong>"</p>
+{% endfor %}

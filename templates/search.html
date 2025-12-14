@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Search - {{ query|default:"Blog" }}{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Search Input */
+#search-input {
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+/* Search Results Grid */
+.search-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Individual Search Item */
+.search-item {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.05);
+    transition: transform 0.2s;
+}
+.search-item:hover { transform: translateY(-3px); }
+.search-item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0.8rem;
+}
+
+/* Blog Title */
+.search-item h5 { margin: 0.5rem 0; }
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .search-results {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h2>Search Blogs</h2>
+
+    <input type="text" id="search-input" class="form-control" 
+           placeholder="Type to search..." value="{{ query|default_if_none:'' }}" autofocus>
+
+    <div id="search-results" class="search-results mt-4">
+        {% include "partials/_search_results.html" with results=blogs query=query %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function() {
+    let timeout;
+    $('#search-input').on('input', function() {
+        clearTimeout(timeout);
+        const q = this.value.trim();
+
+        timeout = setTimeout(() => {
+            if (q.length === 0) {
+                $('#search-results').empty();
+                return;
+            }
+
+            fetch(`{% url 'blog:search' %}?q=${encodeURIComponent(q)}&ajax=1`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                $('#search-results').html(data.html);
+            })
+            .catch(err => console.error('Search error:', err));
+        }, 300); // debounce 300ms
+    });
+});
+</script>
+{% endblock %}

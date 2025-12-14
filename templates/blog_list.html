@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}All Blogs{% endblock %}
+
+{% block extra_css %}
+<style>
+    .blog-item {
+        background: white;
+        padding: 1.2rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 1rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    }
+    .blog-item img {
+        width: 180px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    .trending-box {
+        background: white;
+        padding: 1.3rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.08);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container my-4">
+
+    <h2 class="mb-4">All Blog Posts</h2>
+
+    <div class="row">
+        <div class="col-md-8">
+
+            {% for blog in blogs %}
+            <div class="blog-item">
+                {% if blog.Image %}
+                    <img src="{{ blog.Image.url }}" alt="{{ blog.Title }}">
+                {% endif %}
+
+                <div>
+                    <h4>
+                        <a href="{% url 'blog:blogpost' blog.Slug %}" 
+                           class="text-dark text-decoration-none">
+                            {{ blog.Title }}
+                        </a>
+                    </h4>
+                    <p class="text-muted">
+                        {{ blog.Content.plain|truncatechars:180 }}
+                    </p>
+                    <a href="{% url 'blog:blogpost' blog.Slug %}" class="text-success fw-bold">
+                        Read more →
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+                <p>No posts available.</p>
+            {% endfor %}
+
+        </div>
+
+        <div class="col-md-4">
+            <div class="trending-box">
+                <h5>Trending Now</h5>
+                <hr>
+
+                {% for t in trending %}
+                <p class="mb-2">
+                    <a href="{% url 'blog:blogpost' t.Slug %}" 
+                       class="text-success fw-bold text-decoration-none">
+                        • {{ t.Title }}
+                    </a>
+                </p>
+                {% empty %}
+                    <p>No trending posts.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ category.name }} | TrendScript{% endblock %}
+
+{% block extra_css %}
+<style>
+    .article-item { display: flex; gap: 1rem; background: white; padding: 1rem; border-radius: 12px; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,.05); }
+    .article-item img { width: 160px; height: 110px; object-fit: cover; border-radius: 8px; }
+    .sidebar { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,.08); }
+    @media (max-width: 820px) { .article-item { flex-direction: column; } .article-item img { width: 100%; height: 200px; } }
+</style>
+{% endblock %}
+
+{% block body %}
+<h2>Category: {{ category.name }}</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        {% for blog in blogs %}
+        <div class="article-item">
+            {% if blog.Image %}<img src="{{ blog.Image.url }}" alt="{{ blog.Title }}">{% endif %}
+            <div>
+                <h3><a href="{% url 'blogpost' blog.Slug %}" class="text-dark text-decoration-none">{{ blog.Title }}</a></h3>
+                <p>{{ blog.Content.plain|truncatechars:180 }}</p>
+                <a href="{% url 'blogpost' blog.Slug %}" class="text-success fw-bold">Read more →</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>No posts in this category yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="col-md-4 sidebar">
+        <h4>Trending Posts</h4>
+        {% for t in trending %}
+        <div class="border-bottom pb-2 mb-2">
+            <a href="{% url 'blogpost' t.Slug %}" class="text-success text-decoration-none fw-bold">{{ t.Title }}</a>
+        </div>
+        {% empty %}
+        <p>No trending posts.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

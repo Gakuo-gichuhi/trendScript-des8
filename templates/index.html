@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<!-- HERO SECTION -->
+<div class="hero-box">
+  <h1 style="margin-bottom: 0.5rem; font-size: 2.3rem;">Welcome to TrendScript</h1>
+  <p>Your trusted source for elite insights in Politics, Sports, Education & Culture.</p>
+</div>
+
+<!-- LATEST POSTS TITLE -->
+<h2 style="margin-top: 2rem;">Latest Posts</h2>
+
+<!-- LATEST POSTS GRID -->
+<div class="container-box" style="display:flex; flex-wrap:wrap; gap:1rem; margin-top:1rem;">
+
+  {% for blog in blogs|slice:":6" %}
+    <div class="card" style="flex:1 1 calc(33% - 1rem); min-width:250px;">
+
+      {% if blog.Image %}
+        <img src="{{ blog.Image.url }}" alt="Blog Image">
+      {% endif %}
+
+      <div class="card-body">
+        <h3 class="card-title" style="margin:0; font-size:1.25rem;">
+          {{ blog.Title }}
+        </h3>
+
+        <p class="card-text" style="margin:0.5rem 0 1rem;">
+          {{ blog.Content.plain|truncatewords:20 }}
+        </p>
+
+        <a href="{% url 'blogpost' blog.Slug %}" 
+           style="font-weight:600; color:#006600;">
+          Read More →
+        </a>
+      </div>
+
+    </div>
+
+  {% empty %}
+    <p>No posts available.</p>
+  {% endfor %}
+</div>
+
+{% endblock body %}
