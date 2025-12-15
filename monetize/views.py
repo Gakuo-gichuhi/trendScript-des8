@@ -1,45 +1,20 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import DigitalProduct, Transaction
+
 import uuid
 
-# -------------------------
-# List all products
-# -------------------------
-def products_list(request):
-    products = DigitalProduct.objects.filter(is_active=True).order_by('-created')
-    return render(request, 'monetize/products_list.html', {'products': products})
 
-# -------------------------
-# Product detail
-# -------------------------
-def product_detail(request, slug):
-    product = get_object_or_404(DigitalProduct, slug=slug)
-    return render(request, 'monetize/product_detail.html', {'product': product})
+from .models import FeaturedPost, AffiliateLink
 
-# -------------------------
-# Purchase a product
-# -------------------------
-@login_required
-def purchase_product(request, slug):
-    product = get_object_or_404(DigitalProduct, slug=slug)
-    # Create transaction
-    txn = Transaction.objects.create(
-        user=request.user,
-        product=product,
-        amount=product.price,
-        status='pending'
-    )
-    return redirect('monetize:product_payment', txn_id=txn.id)
+def featured_posts_view(request):
+    posts = FeaturedPost.objects.filter(is_active=True)
+    return render(request, 'monetize/featured_posts.html', {'posts': posts})
 
-# -------------------------
-# Product Payment Page
-# -------------------------
-@login_required
-def product_payment(request, txn_id):
-    txn = get_object_or_404(Transaction, id=txn_id)
-    return render(request, 'monetize/product_payment.html', {'txn': txn})
+def affiliate_links_view(request):
+    links = AffiliateLink.objects.filter(is_active=True)
+    return render(request, 'monetize/affiliate_links.html', {'links': links})
+
 
 # -------------------------
 # Start M-Pesa Payment (STK Push)
@@ -49,7 +24,7 @@ def start_stk_push(request):
     if request.method == 'POST':
         txn_id = request.POST.get('txn_id')
         phone = request.POST.get('phone')
-        txn = get_object_or_404(Transaction, id=txn_id)
+        txn = get_object_or_404( id=txn_id)
         # Here you would integrate actual M-Pesa API
         txn.mpesa_transaction_id = str(uuid.uuid4())
         txn.status = 'success'

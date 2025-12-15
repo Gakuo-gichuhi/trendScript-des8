@@ -1,0 +1,32 @@
+{% comment %}
+    This snippet renders all passed affiliate links and featured posts.
+{% endcomment %}
+{% load monetization_tags %}
+
+<!-- Sidebar -->
+{% render_ads "sidebar" "affiliate" %}
+{% render_ads "sidebar" "featured" %}
+
+<!-- Footer -->
+{% render_ads "footer" "affiliate" %}
+{% render_ads "footer" "featured" %}
+
+<!-- Inside blog post -->
+{% render_ads "inpost" "affiliate" %}
+{% render_ads "inpost" "featured" %}
+
+
+{% comment %} This snippet renders any list of items {% endcomment %}
+<div class="ads-container {{ position }}">
+    {% for item in items %}
+        <div class="ad-item">
+            {% if item.link %}
+                <a href="{{ item.link }}" target="_blank">{{ item.title }}</a>
+            {% else %}
+                {{ item.title }}
+            {% endif %}
+        </div>
+    {% empty %}
+        <!-- No items to display -->
+    {% endfor %}
+</div>

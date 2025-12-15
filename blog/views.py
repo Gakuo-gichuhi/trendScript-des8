@@ -5,7 +5,7 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.db.models import Q, Count
 from django.utils import timezone
-from .models import Blog, Comment, Like, DailyVisitor, DonationInfo, ContactMessage
+from .models import Blog, Comment, Like, DailyVisitor, ContactMessage
 from django.contrib.auth.forms import UserCreationForm
 from django.template.loader import render_to_string
 
@@ -16,12 +16,12 @@ def home(request):
     blogs = Blog.objects.order_by('-time')[:5]
     featured = blogs.first() if blogs.exists() else None
     trending = Blog.objects.annotate(num_likes=Count('likes')).order_by('-num_likes')[:5]
-    donations = DonationInfo.objects.filter(active=True)
+    
     return render(request, 'bloghome.html', {
         'blogs': blogs,
         'featured': featured,
         'trending': trending,
-        'donations': donations
+        
     })
 
 # -------------------------

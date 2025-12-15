@@ -3,21 +3,14 @@ from django_quill.forms import QuillFormField
 from django import forms
 from django.db.models import Count
 
-from .models import Blog, Comment, Like, ContactMessage, DailyVisitor, DonationInfo, Advert
+from .models import Blog, Comment, Like, ContactMessage, DailyVisitor
 
 # =======================
 # Monetization/Admin models
 # =======================
-@admin.register(Advert)
-class AdvertAdmin(admin.ModelAdmin):
-    list_display = ('title', 'position', 'active', 'start_date', 'end_date')
-    list_filter = ('position', 'active')
-    search_fields = ('title',)
 
 
-@admin.register(DonationInfo)
-class DonationInfoAdmin(admin.ModelAdmin):
-    list_display = ('title', 'mpesa_paybill', 'mpesa_account', 'active')
+
 
 
 # =======================

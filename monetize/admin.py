@@ -1,29 +1,15 @@
 from django.contrib import admin
-from .models import DigitalProduct, Transaction
+from .models import FeaturedPost, AffiliateLink
 
-# =======================
-# Digital Product Admin
-# =======================
-@admin.register(DigitalProduct)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'price', 'is_active')
-    prepopulated_fields = {'slug': ('title',)}
-    search_fields = ('title',)
+@admin.register(FeaturedPost)
+class FeaturedPostAdmin(admin.ModelAdmin):
+    list_display = ('blog_post', 'headline', 'is_active', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('blog_post__title', 'headline')
 
 
-# =======================
-# Transaction Admin
-# =======================
-@admin.register(Transaction)
-class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'product', 'amount', 'status', 'created_at')
-    list_filter = ('status',)
-    readonly_fields = ('created_at',)
-    search_fields = ('user__username', 'product__title')
-
-# =======================
-# Admin Panel Titles
-# =======================
-admin.site.index_title = "Monetize Admin"
-admin.site.site_header = "Monetize Panel"
-admin.site.site_title = "Monetize Panel"
+@admin.register(AffiliateLink)
+class AffiliateLinkAdmin(admin.ModelAdmin):
+    list_display = ('title', 'url', 'is_active', 'created_at')
+    list_filter = ('is_active', 'created_at')
+    search_fields = ('title', 'description')

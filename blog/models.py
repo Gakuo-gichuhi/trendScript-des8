@@ -106,52 +106,51 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f"{self.name} - {self.email}"
 
-# ===========================
-# DONATION & AD MODELS
-# ===========================
-class DonationInfo(models.Model):
-    title = models.CharField(max_length=255, default="Support Us")
-    mpesa_paybill = models.CharField(max_length=50, blank=True, null=True)
-    mpesa_account = models.CharField(max_length=50, blank=True, null=True)
+
+
+
+class AffiliateLink(models.Model):
+    title = models.CharField(max_length=255)
+    url = models.URLField()
+    image = models.ImageField(upload_to="affiliate_images/", blank=True, null=True)
     active = models.BooleanField(default=True)
-    is_sponsored = models.BooleanField(default=False)
-    sponsor_name = models.CharField(max_length=255, blank=True, null=True)
-    affiliate_link = models.URLField(blank=True, null=True)
-    affiliate_text = models.CharField(max_length=255, blank=True, null=True)
-    is_featured = models.BooleanField(default=False)
-    featured_until = models.DateField(blank=True, null=True)
-    show_ads = models.BooleanField(default=True)
-    is_paid_review = models.BooleanField(default=False)
-    price = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True)
-    Date = models.DateTimeField(auto_now_add=True)
+    
+    position = models.CharField(
+        max_length=50, 
+        blank=True, 
+        null=True, 
+        help_text="Optional position for template placement (e.g., sidebar, footer, inpost)"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
 
-
-class Advert(models.Model):
-    POSITION_CHOICES = [
-        ('header', 'Header'),
-        ('sidebar', 'Sidebar'),
-        ('inpost', 'In-Post'),
-        ('footer', 'Footer'),
-    ]
+class FeaturedPost(models.Model):
     title = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='adverts/', blank=True, null=True)
-    code = models.TextField(blank=True, null=True)
-    url = models.URLField(blank=True, null=True)
-    position = models.CharField(max_length=20, choices=POSITION_CHOICES, default='sidebar')
+    featured_image = models.ImageField(upload_to="featured_posts/", blank=True, null=True)
+    blog_post = models.ForeignKey("Blog", on_delete=models.CASCADE, related_name="blog_featured_posts")  # assuming Blog model exists
     active = models.BooleanField(default=True)
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
-
-    def is_current(self):
-        today = timezone.now().date()
-        if self.start_date and self.start_date > today:
-            return False
-        if self.end_date and self.end_date < today:
-            return False
-        return self.active
+    position = models.CharField(
+        max_length=50, 
+        blank=True, 
+        null=True, 
+        help_text="Optional position for template placement (e.g., sidebar, footer, inpost)"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.title} ({self.position})"
+        return self.title
+
+    def get_absolute_url(self):
+        return self.blog_post.get_absolute_url()
+    
+POSITION_CHOICES = [
+    ('sidebar', 'Sidebar'),
+    ('footer', 'Footer'),
+    ('inpost', 'In Post'),
+]
+
+position = models.CharField(max_length=20, choices=POSITION_CHOICES)
+active = models.BooleanField(default=True)
+

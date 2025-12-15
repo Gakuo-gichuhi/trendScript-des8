@@ -1,0 +1,27 @@
+{% load monetization_tags %}
+
+<!-- Sidebar -->
+{% render_ads "sidebar" "affiliate" %}
+{% render_ads "sidebar" "featured" %}
+
+<!-- Footer -->
+{% render_ads "footer" "affiliate" %}
+{% render_ads "footer" "featured" %}
+
+<!-- Inside blog post -->
+{% render_ads "inpost" "affiliate" %}
+{% render_ads "inpost" "featured" %}
+
+
+{% for link in links %}
+<div class="affiliate-link">
+    <h3>{{ link.title }}</h3>
+    {% if link.image %}
+        <img src="{{ link.image.url }}" alt="{{ link.title }}">
+    {% endif %}
+    {% if link.description %}
+        <p>{{ link.description }}</p>
+    {% endif %}
+    <a href="{{ link.url }}" target="_blank">Visit</a>
+</div>
+{% endfor %}
