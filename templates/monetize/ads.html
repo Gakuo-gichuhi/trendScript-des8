@@ -1,0 +1,14 @@
+{% for ad in ads %}
+<div class="monetize-card">
+    {% if ad.image %}
+        <a href="{{ ad.url }}" target="_blank">
+            <img src="{{ ad.image.url }}" alt="Ad">
+        </a>
+    {% endif %}
+    {% if ad.text %}
+        <p class="mt-1 mb-0">{{ ad.text }}</p>
+    {% endif %}
+</div>
+{% empty %}
+<p>No ads available.</p>
+{% endfor %}

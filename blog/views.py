@@ -52,6 +52,17 @@ def blogpost(request, slug):
         'comments': comments
     })
 
+def blogpost_view(request, slug):
+    blog = get_object_or_404(Blog, Slug=slug)
+    comments = blog.comments.all()
+    all_posts = Blog.objects.exclude(id=blog.id)[:12]  # For grid
+    return render(request, "blog/blogpost.html", {
+        "blog": blog,
+        "comments": comments,
+        "all_posts": all_posts
+    })
+
+
 # -------------------------
 # Like Blog (AJAX)
 # -------------------------

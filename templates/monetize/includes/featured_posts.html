@@ -1,0 +1,14 @@
+{% for post in featured_posts %}
+<div class="monetize-card">
+    {% if post.blog_post.Image %}
+        <a href="{% url 'blog:blogpost' post.blog_post.Slug %}">
+            <img src="{{ post.blog_post.Image.url }}" alt="{{ post.blog_post.Title }}">
+        </a>
+    {% endif %}
+    {% if post.headline %}
+        <p class="mt-1 mb-0">{{ post.headline }}</p>
+    {% endif %}
+</div>
+{% empty %}
+<p>No featured posts available.</p>
+{% endfor %}

@@ -1,85 +1,88 @@
 {% extends "base.html" %}
-{% block title %}All Blogs{% endblock %}
+
+{% block title %}All Blogs | TrendScript{% endblock %}
 
 {% block extra_css %}
 <style>
-    .blog-item {
-        background: white;
-        padding: 1.2rem;
-        border-radius: 12px;
-        margin-bottom: 1rem;
-        display: flex;
-        gap: 1rem;
-        box-shadow: 0 4px 15px rgba(0,0,0,.08);
-    }
-    .blog-item img {
-        width: 180px;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 10px;
-    }
-    .trending-box {
-        background: white;
-        padding: 1.3rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,.08);
-    }
+/* Grid Layout for All Posts */
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Blog Card */
+.blog-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+.blog-card:hover { transform: translateY(-5px); }
+
+/* Image */
+.blog-card img {
+    width: 100%;             /* Fills the container width */
+    aspect-ratio: 16 / 9;    /* Standard YouTube 720p/1080p ratio */
+    object-fit: cover;
+    object-position: top;       /* 'cover' is better than 'contains' to avoid black bars */
+    display: block;          /* Removes extra bottom whitespace */
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.blog-card img:hover { transform: scale(1.05); }
+
+/* Card Body */
+.blog-card-body {
+    padding: 1rem;
+}
+
+.blog-card-body h5 {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.blog-card-body p {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.blog-card-body a {
+    font-weight: bold;
+    color: #28a745;
+    text-decoration: none;
+}
+
+.blog-card-body a:hover { text-decoration: underline; }
 </style>
 {% endblock %}
 
 {% block body %}
-<div class="container my-4">
 
-    <h2 class="mb-4">All Blog Posts</h2>
+<h4 class="mb-3">All Blog Posts</h4>
 
-    <div class="row">
-        <div class="col-md-8">
-
-            {% for blog in blogs %}
-            <div class="blog-item">
-                {% if blog.Image %}
-                    <img src="{{ blog.Image.url }}" alt="{{ blog.Title }}">
-                {% endif %}
-
-                <div>
-                    <h4>
-                        <a href="{% url 'blog:blogpost' blog.Slug %}" 
-                           class="text-dark text-decoration-none">
-                            {{ blog.Title }}
-                        </a>
-                    </h4>
-                    <p class="text-muted">
-                        {{ blog.Content.plain|truncatechars:180 }}
-                    </p>
-                    <a href="{% url 'blog:blogpost' blog.Slug %}" class="text-success fw-bold">
-                        Read more →
-                    </a>
-                </div>
-            </div>
-            {% empty %}
-                <p>No posts available.</p>
-            {% endfor %}
-
-        </div>
-
-        <div class="col-md-4">
-            <div class="trending-box">
-                <h5>Trending Now</h5>
-                <hr>
-
-                {% for t in trending %}
-                <p class="mb-2">
-                    <a href="{% url 'blog:blogpost' t.Slug %}" 
-                       class="text-success fw-bold text-decoration-none">
-                        • {{ t.Title }}
-                    </a>
-                </p>
-                {% empty %}
-                    <p>No trending posts.</p>
-                {% endfor %}
-            </div>
+<div class="blog-grid">
+    {% for blog in blogs %}
+    <div class="blog-card">
+        <a href="{% url 'blog:blogpost' blog.Slug %}">
+            {% if blog.Image %}
+            <img src="{{ blog.Image.url }}" alt="{{ blog.Title }}">
+            {% endif %}
+        </a>
+        <div class="blog-card-body">
+            <h5>
+                <a href="{% url 'blog:blogpost' blog.Slug %}" class="text-dark text-decoration-none">{{ blog.Title }}</a>
+            </h5>
+            <p>{{ blog.Content.plain|truncatechars:120 }}</p>
+            <a href="{% url 'blog:blogpost' blog.Slug %}">Read more →</a>
         </div>
     </div>
-
+    {% empty %}
+    <p>No blog posts available.</p>
+    {% endfor %}
 </div>
+
 {% endblock %}

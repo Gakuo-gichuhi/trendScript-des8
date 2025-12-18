@@ -1,0 +1,12 @@
+{% for link in affiliate_links %}
+<div class="monetize-card">
+    {% if link.image %}
+        <a href="{{ link.url }}" target="_blank" rel="nofollow">
+            <img src="{{ link.image.url }}" alt="{{ link.title }}">
+        </a>
+    {% endif %}
+    <p class="mt-1 mb-0"><a href="{{ link.url }}" target="_blank">{{ link.title }}</a></p>
+</div>
+{% empty %}
+<p>No affiliate links available.</p>
+{% endfor %}

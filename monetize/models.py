@@ -11,7 +11,8 @@ class FeaturedPost(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.blog_post.title} - {'Active' if self.is_active else 'Inactive'}"
+        return f"Featured: {self.blog_post}"
+
 
 
 class AffiliateLink(models.Model):
@@ -34,6 +35,25 @@ class MonetizationSettings(models.Model):
     show_ads_globally = models.BooleanField(default=True)       # For any ads
     show_affiliate_globally = models.BooleanField(default=True) # For affiliate links
     site_owner_email = models.EmailField(blank=True, null=True)
+    
 
     def __str__(self):
         return "Monetization Settings"
+    
+# monetize/models.py
+
+
+class Ad(models.Model):
+    title = models.CharField(max_length=255)
+    image = models.ImageField(upload_to='ads/', blank=True, null=True)
+    url = models.URLField(blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+
+        
