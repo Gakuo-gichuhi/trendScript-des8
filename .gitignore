@@ -7,3 +7,22 @@ staticfiles/
 media/
 tmp/
 desktop.ini
+
+# Python
+
+
+*.pyo
+
+# Virtual environment
+
+env/
+
+# Django
+
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db

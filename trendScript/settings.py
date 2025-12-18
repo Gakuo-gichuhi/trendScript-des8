@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-j@=blx00$#4an(^n(2g$5m1r)pdv*029%f3c277-#_t6k&h7aq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['trendingspeech.com', 'www.trendingspeech.com', '*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
